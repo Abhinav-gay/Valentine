@@ -34,10 +34,10 @@
   }
 
   .buttons {
-    display: flex;         /* Horizontal layout */
+    display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25px;             /* Space between Yes and No */
+    gap: 25px;
     position: relative;
     height: 50px;
   }
@@ -62,8 +62,10 @@
   #noBtn {
     background: white;
     color: #ff4d6d;
-    position: fixed;   /* floats anywhere */
-    z-index: 50;       /* above everything */
+    position: fixed;   
+    z-index: 50;       
+    border-radius: 40px;
+    transition: left 0.1s, top 0.1s;
   }
 
   #message {
@@ -105,12 +107,12 @@ noBtn.style.left = (yesRect.right + 20) + "px";
 let jumpInterval;
 
 noBtn.addEventListener("mouseenter", () => {
-  // Move No button continuously while hovered
   jumpInterval = setInterval(() => {
     const btnWidth = noBtn.offsetWidth;
     const btnHeight = noBtn.offsetHeight;
     const padding = 10;
 
+    // Maximum position so button stays fully inside viewport
     const maxX = window.innerWidth - btnWidth - padding;
     const maxY = window.innerHeight - btnHeight - padding;
 
@@ -135,6 +137,3 @@ yesBtn.addEventListener("click", () => {
 
 </body>
 </html>
-
-
-
