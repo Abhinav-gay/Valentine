@@ -29,7 +29,7 @@
       max-width: 400px;
       width: 90%;
       position: relative;
-      z-index: 10; /* Ensure text is above the No button */
+      z-index: 10; /* Ensure text is above No button */
     }
 
     h1 {
@@ -39,12 +39,21 @@
       text-shadow: 0 0 8px rgba(255, 77, 109, 0.9);
     }
 
+    /* Buttons container for horizontal layout */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* space between buttons */
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 10;
+    }
+
     button {
       padding: 14px 30px;
       font-size: 1.3rem;
       border: none;
       border-radius: 40px;
-      margin: 10px;
       cursor: pointer;
       font-weight: 600;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -78,7 +87,7 @@
       box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
       transition: left 0.4s ease, top 0.4s ease;
       user-select: none;
-      z-index: 5; /* Behind text container */
+      z-index: 5; /* behind text */
     }
 
     #message {
@@ -120,8 +129,10 @@
 
   <div class="container">
     <h1>Will you be my Valentine, Arpita?? 💘</h1>
-    <button id="yesBtn">Yes ❤️</button>
-    <button id="noBtn">No 💔</button>
+    <div class="buttons">
+      <button id="yesBtn">Yes ❤️</button>
+      <button id="noBtn">No 💔</button>
+    </div>
     <div id="message">I knew it! ❤️<br>Just fun, don't take it seriously 🤣</div>
   </div>
 
@@ -130,10 +141,10 @@
     const yesBtn = document.getElementById("yesBtn");
     const message = document.getElementById("message");
 
-    // Initial position of No button
-    noBtn.style.left = "50%";
-    noBtn.style.top = "65%";
-    noBtn.style.transform = "translate(-50%, -50%)";
+    // Initial position for No button (start near its container)
+    noBtn.style.left = "calc(50% + 80px)"; // roughly next to Yes
+    noBtn.style.top = "calc(50% + 40px)";
+    noBtn.style.transform = "translate(0, 0)";
 
     noBtn.addEventListener("mouseenter", () => {
       const btnWidth = noBtn.offsetWidth;
@@ -163,16 +174,12 @@
       const heart = document.createElement("div");
       heart.classList.add("heart");
       heart.textContent = "❤️";
-
       heart.style.left = Math.random() * 100 + "vw";
       heart.style.animationDuration = (4 + Math.random() * 3) + "s";
       heart.style.animationDelay = (Math.random() * 5) + "s";
-
       document.body.appendChild(heart);
-
       setTimeout(() => { heart.remove(); }, 7000);
     }
-
     setInterval(createHeart, 600);
   </script>
 
