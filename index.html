@@ -4,16 +4,34 @@
 <meta charset="UTF-8">
 <title>Valentine Fun 💘</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
   body {
     margin: 0;
     height: 100vh;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    font-family: Arial, sans-serif;
-    overflow: hidden;
     position: relative;
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: absolute;
+    font-size: 1.5rem;
+    color: rgba(255, 77, 109, 0.7);
+    animation-name: floatUp;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    pointer-events: none;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity:1;}
+    100% { transform: translateY(-120vh) scale(1.5); opacity:0;}
   }
 
   .container {
@@ -24,48 +42,57 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(255,77,109,0.5);
     position: relative;
+    z-index: 10;
   }
 
   h1 {
     color: white;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     margin-bottom: 30px;
-    text-shadow: 0 0 8px rgba(255,77,109,0.9);
+    text-shadow: 0 0 10px rgba(255,77,109,0.9);
   }
 
   .buttons {
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 25px;
-    position: relative;
+    align-items: center;
     height: 50px;
   }
 
   button {
-    padding: 12px 30px;
-    font-size: 1.2rem;
+    padding: 14px 32px;
+    font-size: 1.3rem;
     border: none;
-    border-radius: 40px;
-    cursor: pointer;
+    border-radius: 50px;
     font-weight: bold;
+    cursor: pointer;
     position: relative;
-    user-select: none;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 20;
   }
 
   #yesBtn {
     background: #ff4d6d;
     color: white;
+    box-shadow: 0 5px 20px rgba(255,77,109,0.5);
+    animation: pulseBtn 1.5s infinite alternate;
   }
 
   #noBtn {
     background: white;
     color: #ff4d6d;
-    position: fixed;   
-    z-index: 50;       
-    border-radius: 40px;
+    position: fixed;
+    z-index: 50;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(255,77,109,0.3);
     transition: left 0.1s, top 0.1s;
+  }
+
+  @keyframes pulseBtn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
   }
 
   #message {
@@ -78,7 +105,7 @@
 
   @media(max-width:480px){
     h1{font-size:1.8rem;}
-    button{font-size:1rem;padding:10px 20px;}
+    button{font-size:1.1rem;padding:10px 24px;}
     #message{font-size:1.5rem;}
   }
 </style>
@@ -106,13 +133,13 @@ noBtn.style.left = (yesRect.right + 20) + "px";
 
 let jumpInterval;
 
+// No button jumps smoothly, never goes out of screen
 noBtn.addEventListener("mouseenter", () => {
   jumpInterval = setInterval(() => {
     const btnWidth = noBtn.offsetWidth;
     const btnHeight = noBtn.offsetHeight;
     const padding = 10;
 
-    // Maximum position so button stays fully inside viewport
     const maxX = window.innerWidth - btnWidth - padding;
     const maxY = window.innerHeight - btnHeight - padding;
 
@@ -128,12 +155,28 @@ noBtn.addEventListener("mouseleave", () => {
   clearInterval(jumpInterval);
 });
 
+// Yes button clicked
 yesBtn.addEventListener("click", () => {
   message.style.display = "block";
   yesBtn.style.display = "none";
   noBtn.style.display = "none";
 });
+
+// Floating hearts background
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (15 + Math.random()*25) + "px";
+  heart.style.animationDuration = (4 + Math.random()*4) + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 8000);
+}
+
+setInterval(createHeart, 400);
 </script>
 
 </body>
 </html>
+
