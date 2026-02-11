@@ -29,7 +29,7 @@
       max-width: 400px;
       width: 90%;
       position: relative;
-      z-index: 10; /* Ensure text is above No button */
+      z-index: 10; /* text and buttons on top */
     }
 
     h1 {
@@ -39,14 +39,12 @@
       text-shadow: 0 0 8px rgba(255, 77, 109, 0.9);
     }
 
-    /* Buttons container for horizontal layout */
     .buttons {
       display: flex;
       justify-content: center;
-      gap: 20px; /* space between buttons */
-      flex-wrap: wrap;
+      gap: 20px;
       position: relative;
-      z-index: 10;
+      height: 50px; /* to help with vertical alignment */
     }
 
     button {
@@ -59,6 +57,9 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
       position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #yesBtn {
@@ -85,9 +86,15 @@
       position: absolute;
       padding: 12px 28px;
       box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
-      transition: left 0.4s ease, top 0.4s ease;
+      transition: left 0.3s ease;
       user-select: none;
-      z-index: 5; /* behind text */
+      top: 0;
+      /* left will be set by JS */
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
     }
 
     #message {
@@ -129,7 +136,7 @@
 
   <div class="container">
     <h1>Will you be my Valentine, Arpita?? 💘</h1>
-    <div class="buttons">
+    <div class="buttons" style="position: relative;">
       <button id="yesBtn">Yes ❤️</button>
       <button id="noBtn">No 💔</button>
     </div>
@@ -139,28 +146,42 @@
   <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
+    const buttonsDiv = document.querySelector(".buttons");
     const message = document.getElementById("message");
 
-    // Initial position for No button (start near its container)
-    noBtn.style.left = "calc(50% + 80px)"; // roughly next to Yes
-    noBtn.style.top = "calc(50% + 40px)";
-    noBtn.style.transform = "translate(0, 0)";
+    // Position No button initially next to Yes button
+    function positionNoBtn(initial=true) {
+      const yesRect = yesBtn.getBoundingClientRect();
+      const containerRect = buttonsDiv.getBoundingClientRect();
+
+      // Calculate relative left inside buttonsDiv for noBtn
+      // We'll place it right after Yes button horizontally with a small gap
+      const leftPos = yesBtn.offsetLeft + yesBtn.offsetWidth + 20; // 20px gap
+      noBtn.style.left = leftPos + "px";
+      noBtn.style.top = yesBtn.offsetTop + "px";
+      if(initial){
+        noBtn.style.position = "absolute";
+        noBtn.style.transform = "translate(0, 0)";
+      }
+    }
+
+    positionNoBtn();
 
     noBtn.addEventListener("mouseenter", () => {
       const btnWidth = noBtn.offsetWidth;
-      const btnHeight = noBtn.offsetHeight;
-      const padding = 20;
+      const containerWidth = buttonsDiv.offsetWidth;
 
-      const maxX = window.innerWidth - btnWidth - padding;
-      const minY = window.innerHeight * 0.45; // avoid top text
-      const maxY = window.innerHeight - btnHeight - padding;
+      // Keep vertical fixed
+      const topPos = yesBtn.offsetTop;
+      noBtn.style.top = topPos + "px";
 
-      let newX = Math.random() * maxX + padding / 2;
-      let newY = Math.random() * (maxY - minY) + minY;
+      // Random horizontal position inside buttons container but keep button fully visible
+      const minX = 0;
+      const maxX = containerWidth - btnWidth;
+
+      let newX = Math.random() * (maxX - minX) + minX;
 
       noBtn.style.left = newX + "px";
-      noBtn.style.top = newY + "px";
-      noBtn.style.transform = "translate(0, 0)";
     });
 
     yesBtn.addEventListener("click", () => {
@@ -169,7 +190,7 @@
       noBtn.style.display = "none";
     });
 
-    // Floating hearts
+    // Floating hearts animation
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
